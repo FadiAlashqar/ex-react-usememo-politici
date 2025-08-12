@@ -7,3 +7,7 @@
 body {
   background-color: ghostwhite;
 }
+
+h1 {
+  cursor: pointer;
+}
