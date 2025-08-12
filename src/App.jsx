@@ -1,33 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [politicians, setPoliticians] = useState([]);
+
+  async function getObj(url) {
+    const res = await fetch(url);
+    const obj = await res.json();
+    return obj
+  }
+
+  const showCards = () => {
+    return (async () => {
+      const p = await getObj('http://localhost:3333/politicians')
+      setPoliticians(p)
+    })();
+  }
+
+  useEffect(() => {
+    showCards()
+  }, [])
+
+  console.log(politicians)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="container">
+        <div className="row">
+          <div className="col-12 d-flex justify-content-center">
+            <h1>Politicians</h1>
+          </div>
+        </div>
+        <div className="card-container d-flex flex-wrap p-2n justify-content-center">
+          {politicians.map((politician) => {
+            return <div key={politician.id} className="card">
+              <div className="card-img-top">
+                <img className='img-fluid' src={politician.image
+
+                } />
+              </div>
+              <div className="card-body">
+                <div className="card-title">
+                  <h3>{politician.name}</h3>
+                </div>
+                <div className="card-text">
+                  <p><strong>Position:  </strong>{politician.position
+                  }</p>
+                  <p><strong>Biography:  </strong>{politician.biography
+                  }</p>
+                </div>
+              </div>
+            </div>
+          })}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
